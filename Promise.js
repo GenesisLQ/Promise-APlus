@@ -1,4 +1,6 @@
-const { PENDING, FULFILLED, REJECTED } = require('./constants');
+const PENDING = 'PENDING';
+const FULFILLED = 'FULFILLED';
+const REJECTED = 'REJECTED';
 
 const isPromise = value => typeof value.then === 'function';
 
@@ -108,7 +110,8 @@ class Promise {
     const promise2 = new Promise((resolve, reject) => {
       if (this.status === FULFILLED) {
         // 必须要保证 onFulfilled 和 onRejected 是在异步执行的
-        // 为了拿到 promise2 的这个实例
+        // 为了拿到 promise2 的这个实例，需要延迟去执行，这里使用了 setTimeout
+        // 但是在浏览器的实现中，会把这个定时器改造成微任务，以便更快的执行回调，这就是为什么 Promise 是微任务的原因
         setTimeout(() => {
           try {
             const x = onFulfilled(this.value);

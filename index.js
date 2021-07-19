@@ -78,3 +78,41 @@
 
 // console.log(f.next())
 // console.log(f.next())
+
+const Promise = require('./MyPromise')
+
+const p8 = Promise.race([Promise.resolve(1), 2])
+p8.then(data => console.log(data))
+
+
+const p = new Promise((resolve, reject) => {
+  resolve(1)
+})
+
+const p2 = p.then((data) => {
+  console.log('data1', data);
+  const p3 = new Promise((resolve) => {
+    // status: resolved
+    // value: promise[resolve(4)].then => 
+    resolve(4)
+    // resolve(new Promise((resolve) => {
+    //   resolve(4)
+    // }))
+    // resolve(new Promise((resolve) => {
+    //   resolve(5)
+    // }))
+  })
+  const p4 = p3.then((data) => {
+    console.log('data3', data);
+    return 8
+  })
+  return p4
+}, (e) => {
+  console.log('e', e);
+})
+
+const p5 = p2.then((data) => {
+  console.log('data2', data);
+}, (e) => {
+  console.log('e', e);
+})
